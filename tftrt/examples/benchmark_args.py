@@ -148,6 +148,9 @@ class BaseCommandLineAPI(object):
                                        'for calibration (last batch is skipped '
                                        'in case it is not full)')
 
+        self._parser.add_argument('--max_engines', type=int, default=20,
+                                  help='Maximum number of TRT engines.')
+
         self._add_bool_argument(
             name="optimize_offline",
             default=True,

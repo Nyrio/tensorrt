@@ -89,6 +89,7 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
         max_workspace_size_bytes=DEFAULT_TRT_MAX_WORKSPACE_SIZE_BYTES,
         minimum_segment_size=5,
         num_calib_inputs=None,
+        max_engines=20,
         optimize_offline=False,
         optimize_offline_input_fn=None,
         output_tensor_indices=None,
@@ -131,6 +132,7 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
             max_workspace_size_bytes=max_workspace_size_bytes,
             minimum_segment_size=minimum_segment_size,
             num_calib_inputs=num_calib_inputs,
+            max_engines=max_engines,
             optimize_offline=optimize_offline,
             optimize_offline_input_fn=optimize_offline_input_fn,
             precision_mode=precision_mode,
@@ -208,6 +210,7 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
         max_workspace_size_bytes=DEFAULT_TRT_MAX_WORKSPACE_SIZE_BYTES,
         minimum_segment_size=5,
         num_calib_inputs=None,
+        max_engines=20,
         optimize_offline=False,
         optimize_offline_input_fn=None,
         precision_mode=None,
@@ -237,7 +240,8 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
                 allow_build_at_runtime,
                 max_workspace_size_bytes,
                 precision_mode,
-                minimum_segment_size):
+                minimum_segment_size,
+                max_engines):
 
                 params = copy.deepcopy(trt.DEFAULT_TRT_CONVERSION_PARAMS)
 
@@ -250,12 +254,13 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
                         return trt.TrtPrecisionMode.INT8
                     else:
                         raise RuntimeError("Unknown precision received: `{}`. Expected: "
-                                           "FP32, FP16 or INT8".format(precision))
+                                           "FP32, FP16 or INT8".format(precision_mode))
 
                 params = params._replace(
                     allow_build_at_runtime=allow_build_at_runtime,
                     max_workspace_size_bytes=max_workspace_size_bytes,
                     minimum_segment_size=minimum_segment_size,
+                    max_engines=max_engines,
                     precision_mode=get_trt_precision(),
                     use_calibration=precision_mode == "INT8"
                 )
@@ -269,7 +274,8 @@ class BaseBenchmarkRunner(object, metaclass=abc.ABCMeta):
                 allow_build_at_runtime=allow_build_at_runtime,
                 max_workspace_size_bytes=max_workspace_size_bytes,
                 precision_mode=precision_mode,
-                minimum_segment_size=minimum_segment_size
+                minimum_segment_size=minimum_segment_size,
+                max_engines=max_engines
             )
 
             converter = trt.TrtGraphConverterV2(

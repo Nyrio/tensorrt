@@ -251,6 +251,7 @@ if __name__ == '__main__':
         max_workspace_size_bytes=args.max_workspace_size,
         minimum_segment_size=args.minimum_segment_size,
         num_calib_inputs=args.num_calib_inputs,
+        max_engines=args.max_engines,
         optimize_offline=args.optimize_offline,
         optimize_offline_input_fn=optimize_offline_input_fn,
         output_tensor_indices=args.output_tensor_indices,
